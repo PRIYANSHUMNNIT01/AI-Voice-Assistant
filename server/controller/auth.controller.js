@@ -1,8 +1,8 @@
-import generateToken from "../config/token";
-import User from "../models/user.model";
+import generateToken from "../config/token.js";
+import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
-const signup = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const existEmail = await User.findOne({ email });
@@ -24,7 +24,7 @@ const signup = async (req, res) => {
     return res.status(500).json({ message: "signUp error" });
   }
 };
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -43,7 +43,7 @@ const login = async (req, res) => {
     return res.status(500).json({ message: "login error" });
   }
 };
-const logout = (req,res)=>{
+export const logout = (req,res)=>{
     try {
         res.clearCookie("token")
         return res.status(200).json({message:"logged out successfully"})

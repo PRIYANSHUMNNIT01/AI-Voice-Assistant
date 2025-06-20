@@ -1,17 +1,23 @@
 import express from "express"
 import dotenv from "dotenv"
 import connectDb from "./config/db.js"
-import router from "./routes/user.route.js"
+import router from "./routes/auth.route.js"
+import cookieParser from "cookie-parser"
+import cors from "cors"
+import UserRouter from "./routes/user.route.js"
 
 dotenv.config()
 const app=express()
-const port =process.env.PORT || 5001
-app.use(express.json())
 app.use(cookieParser())
-app.use("/",(req,res)=>{
-    res.send(`hello world`)
-})
+const port =process.env.PORT || 5001
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true,
+}))
+app.use(express.json())
+
 app.use("/api/auth",router)
+app.use("/api/user",UserRouter)
 
 app.listen(port,()=>{
     connectDb();

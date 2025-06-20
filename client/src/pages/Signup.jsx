@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import bg from "../assets/image.webp";
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
 import { Link } from "react-router";
+import axios from "axios";
+import { UserDataContext } from "../context/UserContext";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const { serverUrl } = useContext(UserDataContext);
   const handleEye = () => {
     setShowPassword(!showPassword);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      let res = await axios.post(
+        `${serverUrl}/api/auth/signup`,
+        { name, email, password },
+        { withCredentials: true }
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div
@@ -27,14 +43,14 @@ const Signup = () => {
           type="text"
           required
           value={name}
-          onChange={(e)=>setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           placeholder="Enter your Name"
         />
         <input
           className="w-full mb-5 px-4 py-3 rounded-md bg-white/10 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-blue-400"
           type="email"
           required
-          onChange={(e)=>setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           value={email}
           placeholder="Enter your Email Address"
         />
@@ -44,7 +60,7 @@ const Signup = () => {
             type={showPassword ? "text" : "password"}
             required
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your Password"
           />
           {!showPassword ? (
@@ -60,7 +76,10 @@ const Signup = () => {
           )}
         </div>
 
-        <button className="w-full mb-4 py-3 bg-blue-500 hover:bg-blue-600 rounded-md font-semibold transition-all">
+        <button
+          className="w-full mb-4 py-3 bg-blue-500 hover:bg-blue-600 rounded-md font-semibold transition-all"
+          onClick={handleSubmit}
+        >
           Register
         </button>
         <p>
