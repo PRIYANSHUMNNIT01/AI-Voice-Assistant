@@ -9,7 +9,7 @@ import img5 from "../assets/img5.jpeg";
 import img6 from "../assets/img6.jpeg";
 import img7 from "../assets/ai_img.jpeg";
 import { RiImageAddLine } from "react-icons/ri";
-import { UserDataContext } from "../context/UserContext.jsx";
+import { UserDataContext } from "../context/UserDataContext.js";
 import Customize2 from "./Customize2.jsx";
 import { IoArrowBackOutline } from "react-icons/io5";
 

@@ -4,7 +4,7 @@ import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
 import { Link } from "react-router";
 import axios from "axios";
-import { UserDataContext } from "../context/UserContext";
+import { UserDataContext } from "../context/UserDataContext.js";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);

@@ -5,6 +5,7 @@ import router from "./routes/auth.route.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import UserRouter from "./routes/user.route.js"
+import geminiResponse from "./gemini.js"
 
 dotenv.config()
 const app=express()
@@ -15,7 +16,11 @@ app.use(cors({
     credentials:true,
 }))
 app.use(express.json())
-
+app.get("/",async (req,res)=>{
+    const prompt=req.query.prompt;
+    let data=await geminiResponse(prompt)
+    return res.json(data);
+})
 app.use("/api/auth",router)
 app.use("/api/user",UserRouter)
 

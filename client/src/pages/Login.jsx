@@ -2,15 +2,16 @@ import React, { useContext, useState } from "react";
 import bg from "../assets/image.webp";
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import axios from "axios";
-import { UserDataContext } from "../context/UserContext";
+import { UserDataContext } from "../context/UserDataContext.js";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const { serverUrl } = useContext(UserDataContext);
+  const { serverUrl,setIsLoggedIn } = useContext(UserDataContext);
+  const navigate = useNavigate()
   const handleEye = () => {
     setShowPassword(!showPassword);
   };
@@ -22,6 +23,7 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
+      navigate("/customize")
       console.log(res);
     } catch (error) {
       console.log(error);
