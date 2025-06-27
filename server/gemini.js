@@ -44,16 +44,25 @@ Important:
 now your userInput- ${command}
 `;
 
-    const result = await axios.post(api_url, {
-      contents: [
-        {
-          parts: [{ text: prompt }],
+    const result = await axios.post(
+      api_url,
+      {
+        contents: [
+          {
+            parts: [{ text: prompt }],
+          },
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${api_key}`,
         },
-      ],
-    });
+      }
+    );
     return result.data.candidates[0]?.content?.parts[0]?.text;
   } catch (error) {
-    console.log(error);
+    console.log(error?.response?.data?.error?.message || error.message);
   }
 };
 export default geminiResponse;

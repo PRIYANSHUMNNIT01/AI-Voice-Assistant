@@ -3,7 +3,7 @@ import axios from "axios";
 import { UserDataContext } from "./UserDataContext";
 
 const UserContext = ({ children }) => {
-  const serverUrl = "http://localhost:8000";
+  const serverUrl = "https://ai-voice-assistance-aweh.onrender.com/";
   const [userData, setUserData] = useState(false);
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
