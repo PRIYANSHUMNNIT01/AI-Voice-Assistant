@@ -8,7 +8,7 @@ import { MdOutlineMenu } from "react-icons/md"
 import { ImCross } from "react-icons/im"
 
 const Home = () => {
-  const { userData, serverUrl, getGeminiResponse } =
+  const { userData, serverUrl,setUserData, getGeminiResponse } =
     useContext(UserDataContext);
     const navigate = useNavigate()
 
