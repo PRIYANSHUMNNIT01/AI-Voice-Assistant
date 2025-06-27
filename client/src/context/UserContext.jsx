@@ -4,7 +4,7 @@ import { UserDataContext } from "./UserDataContext";
 
 const UserContext = ({ children }) => {
   const serverUrl = "http://localhost:8000";
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(false);
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -16,9 +16,8 @@ const UserContext = ({ children }) => {
         withCredentials: true,
       });
       setUserData(result.data);
-      console.log("userData-",result);
     } catch (error) {
-      console.error("Error fetching current user:", error);
+      console.error(error.response?.data?.message);
     }
   };
 
@@ -37,7 +36,7 @@ const UserContext = ({ children }) => {
 
   useEffect(() => {
     handleCurrentUser();
-    console.log(userData)
+    console.log("userData",userData);
   }, []);
 
   const value = {

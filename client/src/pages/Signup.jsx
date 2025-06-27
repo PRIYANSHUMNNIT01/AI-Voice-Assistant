@@ -2,19 +2,20 @@ import React, { useContext, useState } from "react";
 import bg from "../assets/image.webp";
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import axios from "axios";
 import { UserDataContext } from "../context/UserDataContext.js";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { serverUrl } = useContext(UserDataContext);
   const handleEye = () => {
     setShowPassword(!showPassword);
   };
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -23,6 +24,7 @@ const Signup = () => {
         { name, email, password },
         { withCredentials: true }
       );
+      navigate("/customize")
       console.log(res.data);
     } catch (error) {
       console.log(error);

@@ -8,8 +8,8 @@ import { UserDataContext } from "../context/UserDataContext.js";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { serverUrl,setIsLoggedIn } = useContext(UserDataContext);
   const navigate = useNavigate()
   const handleEye = () => {
