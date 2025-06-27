@@ -3,7 +3,8 @@ import axios from "axios";
 import { UserDataContext } from "./UserDataContext";
 
 const UserContext = ({ children }) => {
-  const serverUrl = "https://ai-voice-assistance-aweh.onrender.com/";
+  const serverUrl = "https://ai-voice-assistance-aweh.onrender.com";
+  // const serverUrl = "https://localhost:8000";
   const [userData, setUserData] = useState(false);
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
@@ -15,9 +16,10 @@ const UserContext = ({ children }) => {
       const result = await axios.get(`${serverUrl}/api/user/current`, {
         withCredentials: true,
       });
+      console.log(result)
       setUserData(result.data);
     } catch (error) {
-      console.error(error.response?.data?.message);
+      console.error("error in handlecurrentuser ",error.response?.data?.message);
     }
   };
 
@@ -36,8 +38,7 @@ const UserContext = ({ children }) => {
 
   useEffect(() => {
     handleCurrentUser();
-    console.log("userData",userData);
-  }, []);
+  }, [userData,]);
 
   const value = {
     serverUrl,

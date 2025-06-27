@@ -11,7 +11,7 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { serverUrl } = useContext(UserDataContext);
+  const { serverUrl,setUserData } = useContext(UserDataContext);
   const handleEye = () => {
     setShowPassword(!showPassword);
   };
@@ -24,6 +24,7 @@ const Signup = () => {
         { name, email, password },
         { withCredentials: true }
       );
+      setUserData(res.data)
       navigate("/customize")
       console.log(res.data);
     } catch (error) {

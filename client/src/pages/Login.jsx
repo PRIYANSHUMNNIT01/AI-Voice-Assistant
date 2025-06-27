@@ -10,7 +10,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { serverUrl,setIsLoggedIn } = useContext(UserDataContext);
+  const { serverUrl,setUserData } = useContext(UserDataContext);
   const navigate = useNavigate()
   const handleEye = () => {
     setShowPassword(!showPassword);
@@ -23,8 +23,9 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
+      setUserData(res.data);
       navigate("/customize")
-      console.log(res);
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }

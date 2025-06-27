@@ -15,9 +15,9 @@ export const signup = async (req, res) => {
     const token = generateToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // ✅ 7 days
-      sameSite: "Strict", // or "Lax" if needed
-      secure: false, // ✅ keep false in dev (localhost)
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      sameSite: "None", 
+      secure: true, 
     });
 
     return res.status(201).json(user);
@@ -35,9 +35,9 @@ export const login = async (req, res) => {
     const token = generateToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // ✅ 7 days
-      sameSite: "Strict", // or "Lax" if needed
-      secure: false, // ✅ keep false in dev (localhost)
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      sameSite: "None", 
+      secure: true, 
     });
 
     return res.status(200).json(user);
