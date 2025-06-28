@@ -10,11 +10,11 @@ import { ImSpinner11 } from "react-icons/im";
 
 const AppRoutes = () => {
   const { userData } = useContext(UserDataContext);
-  if (userData === false) {
+  if (userData === undefined) {
     return <div className="flex flex-col items-center min-h-screen justify-center">
       <ImSpinner11 className="text-2xl animate-spin mb-4" />
       <p>Loading...</p>
-</div>; // or a spinner
+      </div>;
   }
   return (
     <Routes>

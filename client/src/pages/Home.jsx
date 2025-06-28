@@ -25,8 +25,8 @@ const Home = () => {
   // 🔌 Logout handler
   const handleLogOut = async () => {
     try {
-      await axios.post(`${serverUrl}/api/auth/logout`, {}, { withCredentials: true });
-      setUserData(null);
+      await axios.get(`${serverUrl}/api/auth/logout`, { withCredentials: true });
+      setUserData(false);
       navigate("/signin");
       console.log("User logged out");
     } catch (error) {

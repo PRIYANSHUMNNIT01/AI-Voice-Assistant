@@ -5,7 +5,7 @@ import { UserDataContext } from "./UserDataContext";
 const UserContext = ({ children }) => {
   const serverUrl = "https://ai-voice-assistance-aweh.onrender.com";
   // const serverUrl = "https://localhost:8000";
-  const [userData, setUserData] = useState(false);
+  const [userData, setUserData] = useState(undefined);
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
