@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import bg from "../assets/image.webp";
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserDataContext } from "../context/UserDataContext.js";
 
