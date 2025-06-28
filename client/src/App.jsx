@@ -6,11 +6,15 @@ import Login from "./pages/Login";
 import Customize from "./pages/Customize";
 import Customize2 from "./pages/Customize2";
 import { UserDataContext } from "./context/UserDataContext";
+import { ImSpinner11 } from "react-icons/im";
 
 const AppRoutes = () => {
   const { userData } = useContext(UserDataContext);
   if (userData === false) {
-    return <div>Loading...</div>; // or a spinner
+    return <div className="flex flex-col items-center min-h-screen justify-center">
+      <ImSpinner11 className="text-2xl animate-spin mb-4" />
+      <p>Loading...</p>
+</div>; // or a spinner
   }
   return (
     <Routes>
