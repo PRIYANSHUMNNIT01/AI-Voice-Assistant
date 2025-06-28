@@ -9,7 +9,7 @@ import { UserDataContext } from "./context/UserDataContext";
 
 const AppRoutes = () => {
   const { userData } = useContext(UserDataContext);
-  if (userData === null) {
+  if (userData === false) {
     return <div>Loading...</div>; // or a spinner
   }
   return (
