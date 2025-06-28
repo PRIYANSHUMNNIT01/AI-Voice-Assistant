@@ -23,6 +23,10 @@ app.get("/",async (req,res)=>{
 })
 app.use("/api/auth",router)
 app.use("/api/user",UserRouter)
+app.get('/api/status', (req, res) => {
+  res.status(200).json({ message: 'Server is working' });
+});
+
 
 app.listen(port,()=>{
     connectDb();
