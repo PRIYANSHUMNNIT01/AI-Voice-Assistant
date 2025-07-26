@@ -35,21 +35,13 @@ const AppRoutes = () => {
       <Route
         path="/customize"
         element={
-          userData?.assistantImage && userData?.assistantName ? (
-            <Navigate to="/" replace />
-          ) : (
             <Customize />
-          )
         }
       />
       <Route
         path="/customize2"
         element={
-          userData?.assistantImage && userData?.assistantName ? (
-            <Navigate to="/" replace />
-          ) : (
             <Customize2 />
-          )
         }
       />
     </Routes>

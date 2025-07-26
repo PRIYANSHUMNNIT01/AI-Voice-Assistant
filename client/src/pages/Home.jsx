@@ -97,7 +97,9 @@ const Home = () => {
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition || !userData?.assistantName) return;
+    if (!SpeechRecognition || !userData?.assistantName){
+      console.log("!SpeechRecognition || !userData?.assistantName is false")
+       return;}
 
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
@@ -166,7 +168,7 @@ const Home = () => {
         }
       }
     };
-
+    recognition.start();
     // 👋 Initial greeting
     if (!greetedRef.current && userData?.name) {
       const greeting = new SpeechSynthesisUtterance(`Hello ${userData.name}, what can I help you with?`);
@@ -187,7 +189,7 @@ const Home = () => {
       isRecognizingRef.current = false;
       setListening(false);
     };
-  }, [userData]);
+  }, []);
 
   return (
     <div className='w-full h-[100vh] bg-gradient-to-t from-[#000000] via-[#000010] to-[#000033]

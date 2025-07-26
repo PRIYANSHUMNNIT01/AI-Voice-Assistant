@@ -18,13 +18,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      navigate("/")
       let res = await axios.post(
         `${serverUrl}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );
       setUserData(res.data);
-      navigate("/customize")
+      if(res.data!==null)navigate("/customize")
       console.log(res.data);
     } catch (error) {
       console.log(error);

@@ -38,7 +38,6 @@ const UserContext = ({ children }) => {
 
   useEffect(() => {
     handleCurrentUser();
-    // if(userData===undefined)setUserData(false);
   }, []);
 
   const value = {
