@@ -56,6 +56,7 @@ now your userInput- ${command}
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.GEMINI_API_KEY}`,
         },
       }
     );
