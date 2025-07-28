@@ -5,8 +5,8 @@ import moment from "moment";
 
 export const getCurrentUser = async (req, res) => {
   try {
+    console.log("userId","userId")
     const userId = req.userId;
-    // console.log("userId",userId)
     const user = await User.findById(userId).select("-password");
     if (!user) {
       return res.status(400).json({ message: "user not found" });
@@ -44,7 +44,9 @@ export const updateAssistant = async (req, res) => {
 };
 export const askToAssistant = async (req,res) => {
   try {
+    console.log("first")
     const { command } = req.body;
+    console.log("first",command)
     const user = await User.findById(req.userId);
     const userName = user.name;
     const assistantName = user.assistantName;

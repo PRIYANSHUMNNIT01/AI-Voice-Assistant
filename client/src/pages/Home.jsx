@@ -160,6 +160,7 @@ const Home = () => {
         setListening(false);
         try {
           const data = await getGeminiResponse(transcript);
+          console.log(data)
           handleCommand(data);
           setAiText(data.response);
         } catch (err) {

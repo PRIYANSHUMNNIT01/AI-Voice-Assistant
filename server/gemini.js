@@ -56,7 +56,6 @@ now your userInput- ${command}
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${api_key}`,
         },
       }
     );

@@ -16,6 +16,7 @@ const UserContext = ({ children }) => {
       const result = await axios.get(`${serverUrl}/api/user/current`, {
         withCredentials: true,
       });
+      console.log("first")
       console.log(result.data)
       setUserData(result.data);
     } catch (error) {
@@ -30,8 +31,10 @@ const UserContext = ({ children }) => {
         { command },
         { withCredentials: true }
       );
+      console.log("result",result)
       return result.data;
     } catch (error) {
+      // console.log("first")
       console.error("Error in getGeminiResponse:", error);
     }
   };
