@@ -5,7 +5,7 @@ import moment from "moment";
 
 export const getCurrentUser = async (req, res) => {
   try {
-    console.log("userId","userId")
+    console.log("userId", "userId");
     const userId = req.userId;
     const user = await User.findById(userId).select("-password");
     if (!user) {
@@ -42,11 +42,14 @@ export const updateAssistant = async (req, res) => {
       .json({ message: "update assistant error from controller" });
   }
 };
-export const askToAssistant = async (req,res) => {
+export const askToAssistant = async (req, res) => {
   try {
-    console.log("first")
+    // console.log("first")
     const { command } = req.body;
-    console.log("first",command)
+    if (!command) {
+      return res.status(400).json({ response: "No command provided." });
+    }
+
     const user = await User.findById(req.userId);
     const userName = user.name;
     const assistantName = user.assistantName;
