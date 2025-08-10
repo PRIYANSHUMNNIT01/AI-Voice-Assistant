@@ -42,75 +42,69 @@ export const updateAssistant = async (req, res) => {
       .json({ message: "update assistant error from controller" });
   }
 };
-export const askToAssistant = async (req, res) => {
-  try {
-    // console.log("first")
-    const { command } = req.body;
-    if (!command) {
-      return res.status(400).json({ response: "No command provided." });
+export const askToAssistant= async(req,res)=>{
+    try{
+        const {command}=req.body;
+        const user= await User.findById(req.userId);
+        user.history.push(command);
+        user.save();
+        const userName=user.name;
+        const assistantName=user.assistantName
+        const result=await geminiResponse(command,assistantName,userName)
+
+        const jsonMatch=result.match(/{[\s\S]*}/);
+        if(! jsonMatch) return res.status(400).json({response: "Sorry I cant understand"});
+
+        const gemResult=JSON.parse(jsonMatch[0]);
+        const type=gemResult.type;
+
+        switch(type){
+            case 'get-date':
+                return res.json({
+                    type,
+                    userInput:gemResult.userInput,
+                    response:`current date is ${moment().format("YYY-MM-DD")}`
+                })
+            
+            case 'get-time':
+                return res.json({
+                    type,
+                    userInput:gemResult.userInput,
+                    response:`current time is ${moment().format('hh:mm:ss A')}`
+                })
+            
+            case 'get-day':
+                return res.json({
+                    type,
+                    userInput:gemResult.userInput,
+                    response:`today is ${moment().format('dddd')}`
+                })
+
+            case 'get-month':
+                return res.json({
+                    type,
+                    userInput:gemResult.userInput,
+                    response:`current time is ${moment().format('MMMM')}`
+                })
+            
+            case "google-search":
+            case "youtube-search":
+            case "youtube-play":
+            case "general":
+            case "instagram-open":
+            case "facebook-open":
+            case "weather-show":
+                return res.json({
+                    type,
+                    userInput:gemResult.userInput,
+                    response:gemResult.response,
+                });
+
+                default:
+                    return res.status(400).json({response: "I didn't understand that command."})
+
+        }
+    }catch(err){
+        return res.status(500).json({response: "askToAssistant Error!"})
     }
-
-    const user = await User.findById(req.userId);
-    const userName = user.name;
-    const assistantName = user.assistantName;
-    const result = await geminiResponse(command, assistantName, userName);
-    const jsonMatch = result.match(/{[\s\S]*}/);
-    if (!jsonMatch)
-      return res.status(400).json({ response: "sorry, i can't understand." });
-    const gemResult = JSON.parse(jsonMatch[0]);
-    const type = gemResult.type;
-    switch (type) {
-      case "get-date":
-        return res.json({
-          type,
-          userInput: gemResult.userInput,
-          response: `current date is ${moment().format("DD-MM-YYYY")}`,
-        });
-      case "get-time":
-        return res.json({
-          type,
-          userInput: gemResult.userInput,
-          response: `Current time is ${moment().format("hh:mm A")}`,
-        });
-
-      case "get-day":
-        return res.json({
-          type,
-          userInput: gemResult.userInput,
-          response: `Today is ${moment().format("dddd")}`,
-        });
-
-      case "get-month":
-        return res.json({
-          type,
-          userInput: gemResult.userInput,
-          response: `Current month is ${moment().format("MMMM")}`,
-        });
-
-      case "general":
-      case "google-search":
-      case "youtube-search":
-      case "youtube-play":
-      case "calculator-open":
-      case "instagram-open":
-      case "facebook-open":
-      case "weather-show":
-        return res.json({
-          type,
-          userInput: gemResult.userInput,
-          response: gemResult.response,
-        });
-      default:
-        return res.json({
-          type: "unknown",
-          userInput: gemResult.userInput,
-          response: "Sorry, I didn't understand that command.",
-        });
-    }
-  } catch (error) {
-    console.error("asking assistant error:", error);
-    return res
-      .status(400)
-      .json({ message: "asking assistant error from controller" });
-  }
-};
+}
