@@ -51,6 +51,9 @@ export const askToAssistant= async(req,res)=>{
         const userName=user.name;
         const assistantName=user.assistantName
         const result=await geminiResponse(command,assistantName,userName)
+         
+        console.log("RAW AI RESPONSE:");
+        console.log(result);
 
         const jsonMatch=result.match(/{[\s\S]*}/);
         if(! jsonMatch) return res.status(400).json({response: "Sorry I cant understand"});
@@ -105,6 +108,11 @@ export const askToAssistant= async(req,res)=>{
 
         }
     }catch(err){
-        return res.status(500).json({response: "askToAssistant Error!"})
-    }
+    console.log("ASK ERROR:");
+    console.log(err);
+
+    return res.status(500).json({
+        response:"askToAssistant Error!"
+    });
+}
 }

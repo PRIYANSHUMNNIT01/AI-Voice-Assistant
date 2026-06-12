@@ -3,9 +3,9 @@ import axios from "axios";
 import { UserDataContext } from "./UserDataContext";
 
 const UserContext = ({ children }) => {
-  const serverUrl = "https://ai-voice-assistance-aweh.onrender.com";
-  // const serverUrl = "https://localhost:8000";
-  const [userData, setUserData] = useState(undefined);
+ 
+  const serverUrl = "http://localhost:5001";
+  const [userData, setUserData] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -20,19 +20,28 @@ const UserContext = ({ children }) => {
       console.log(result.data)
       setUserData(result.data);
     } catch (error) {
-      console.error("error in handlecurrentuser ",error.response?.data?.message);
+      console.error("error in handlecurrentuser ", error);
+      setUserData(null);
     }
   };
 
-  const getGeminiResponse= async(command)=>{
-      try{
-        const result= await axios.post(`${serverUrl}/api/user/ask`,
-          {command},{withCredentials:true})
-          return result?.data;
-      }catch(err){
-        console.log(err);
-      }
+  const getGeminiResponse = async (command) => {
+    console.log("SENDING TO BACKEND:", command);
+  
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/user/ask`,
+        { command },
+        { withCredentials: true }
+      );
+  
+      console.log("BACKEND REPLIED:", result.data);
+  
+      return result.data;
+    } catch (err) {
+      console.log("AXIOS ERROR:", err);
     }
+  };
 
   useEffect(() => {
     handleCurrentUser();

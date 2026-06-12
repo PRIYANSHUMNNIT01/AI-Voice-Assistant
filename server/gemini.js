@@ -1,68 +1,89 @@
-import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
+
+import Groq from "groq-sdk";
+
+console.log("GROQ KEY =", process.env.GROQ_API_KEY);
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 const geminiResponse = async (command, assistantName, userName) => {
   try {
-    const api_url = process.env.GEMINI_API_URL;
-    const prompt = `You are a virtual assistant named ${assistantName} created by ${userName}.
-You are not Google. You will now behave like a voice-enabled assistant.
-Your task is to understand the user's natural language input and respond with a JSON object like this:
+    const prompt = `
+You are a voice assistant.
 
+You MUST respond ONLY with valid JSON.
+
+Examples:
+
+User: play believer on youtube
+Response:
 {
-  "type": "general" | "google-search" | "youtube-search" | "youtube-play" |
-          "get-time" | "get-date" | "get-day" | "get-month" |
-          "calculator-open" | "instagram-open" | "facebook-open" | "weather-show",
-  "userInput": "<original user input>" {only remove your name from userinput if exists} 
-                aur agar kisi ne google ya youtube pe kuch search karne ko bola hai 
-                to userInput me only vo search wala text jaye,
-  "response": "<a short spoken response to read out loud to the user>"
+  "type":"youtube-play",
+  "userInput":"believer",
+  "response":"Playing believer on YouTube."
 }
 
-Instructions:
-- "type": determine the intent of the user.
-- "userInput": original sentence the user spoke.
-- "response": A short voice-friendly reply, e.g., "Sure, doing it now", "Here's what I found", "Today is Tuesday", etc.
+User: search cats on youtube
+Response:
+{
+  "type":"youtube-search",
+  "userInput":"cats",
+  "response":"Searching YouTube for cats."
+}
 
-Type meanings:
-- "general": if it's a factual or informational question.
-aur agar koi aisa question puchta hai jiska answer tumhe pta hai usko bhi
-general ki category me rakho bas short answer dena
-- "google-search": if user wants to search something on Google.
-- "youtube-search": if user wants to search something on YouTube.
-- "youtube-play": if user wants to directly play a video or song.
-- "calculator-open": if user wants to open a calculator.
-- "instagram-open": if user wants to open Instagram.
-- "facebook-open": if user wants to open Facebook.
-- "weather-show": if user wants to know weather.
-- "get-time": if user asks for current time.
-- "get-date": if user asks for today's date.
-- "get-day": if user asks what day it is.
-- "get-month": if user asks for the current month.
+User: search javascript on google
+Response:
+{
+  "type":"google-search",
+  "userInput":"javascript",
+  "response":"Searching Google for javascript."
+}
 
-Important:
-- Use ${userName} agar koi puche tumhe kisne banaya.
-- Only respond with the JSON object, nothing else.
+User: open instagram
+Response:
+{
+  "type":"instagram-open",
+  "userInput":"instagram",
+  "response":"Opening Instagram."
+}
 
-now your userInput- ${command}
+User: what time is it
+Response:
+{
+  "type":"get-time",
+  "userInput":"what time is it",
+  "response":"Checking current time."
+}
+
+Now classify:
+
+${command}
 `;
 
-    const result = await axios.post(
-      api_url,
-      {
-        contents: [
-          {
-            parts: [{ text: prompt }],
-          },
-        ],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.GEMINI_API_KEY}`,
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
         },
-      }
-    );
-    return result.data.candidates[0]?.content?.parts[0]?.text;
+      ],
+      temperature: 0,
+    });
+
+    return completion.choices[0].message.content;
   } catch (error) {
-    console.log(error?.response?.data?.error?.message || error.message);
+    console.log("GROQ ERROR:");
+    console.log(error);
+
+    return JSON.stringify({
+      type: "general",
+      userInput: command,
+      response: "Sorry, I am unavailable right now.",
+    });
   }
 };
+
 export default geminiResponse;

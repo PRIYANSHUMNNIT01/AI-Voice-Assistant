@@ -1,16 +1,25 @@
-import jwt from 'jsonwebtoken'
-const isAuth =async (req,res,next)=>{
-    console.log(req.cookies)
+import jwt from "jsonwebtoken";
+
+const isAuth = async (req, res, next) => {
     try {
-        const token = req.cookies.token
-        if(!token){
+        const token = req.cookies.token;
+
+        if (!token) {
             return res.status(200).json(null);
         }
-        const verifyToken =await jwt.verify(token,process.env.JWT_SECRET)
+
+        const verifyToken = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
         req.userId = verifyToken.userId;
-        next()
+        next();
+
     } catch (error) {
         console.log(error);
+        return res.status(200).json(null);
     }
-}
-export default isAuth
+};
+
+export default isAuth;

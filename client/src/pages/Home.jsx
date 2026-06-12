@@ -75,7 +75,7 @@ const Home = () => {
       window.open('https://www.google.com/search?q=weather', '_blank');
     }
 
-    if (type === 'youtube_search' || type === 'youtube-play') {
+    if (type === 'youtube-search' || type === 'youtube-play') {
       const query = encodeURIComponent(userInput);
       window.open(`https://www.youtube.com/results?search_query=${query}`, '_blank');
     }
@@ -120,10 +120,53 @@ const Home = () => {
 
    
 
-    recognition.onstart = () => {
-      isRecognizingRef.current = true;
-      setListening(true);
+    recognition.onresult = async (e) => {
+       console.log("🔥 ONRESULT FIRED");
+
+  const transcript =
+    e.results[e.results.length - 1][0].transcript.trim();
+
+  console.log("heard:", transcript);
+  console.log("assistant:", userData?.assistantName);
+
+  if (
+    userData?.assistantName &&
+    transcript
+      .toLowerCase()
+      .includes(userData.assistantName.toLowerCase())
+  ) {
+    console.log("Assistant name detected");
+
+    setAiText("");
+    setUserText(transcript);
+
+    recognition.stop();
+    isRecognizingRef.current = false;
+    setListening(false);
+
+    console.log("Calling backend...");
+
+    try {
+      const data = await getGeminiResponse(transcript);
+
+      console.log("Backend response:", data);
+
+      if (!data) {
+        console.log("No data returned");
+        return;
+      }
+
+      handleCommand(data);
+
+      setAiText(data.response);
+      setUserText("");
+    } catch (err) {
+      console.error("Gemini error:", err);
     }
+  } else {
+    console.log("Assistant name not found in transcript");
+  }
+};
 
     recognition.onend = () => {
       isRecognizingRef.current = false;
@@ -143,7 +186,9 @@ const Home = () => {
         }, 1000)
       }
     };
-
+console.log("SpeechRecognition:", window.SpeechRecognition);
+console.log("webkitSpeechRecognition:", window.webkitSpeechRecognition);
+console.log("UserData:", userData);
     recognition.onerror = (event) => {
       console.warn("Recognition error:", event.error);
       isRecognizingRef.current = false;
@@ -164,23 +209,7 @@ const Home = () => {
       }
     };
 
-    recognition.onresult = async (e) => {
-      const transcript = e.results[e.results.length - 1][0].transcript.trim();
-      console.log("heard : " + transcript);
-      if (transcript.toLowerCase().includes(userData.assistantName.toLowerCase())) {
-        setAiText("")
-        setUserText(transcript)
-        recognition.stop()
-        isRecognizingRef.current = false
-        setListening(false)
-        const data = await getGeminiResponse(transcript);
-        console.log(data)
-        handleCommand(data)
-        setAiText(data.response)
-        setUserText("")
-      }
-    }
-
+    
     if (!greetedRef.current && userData?.name) {
       const greeting = new SpeechSynthesisUtterance(`Hello ${userData.name}, what can I help you with?`);
       greeting.lang = 'en-US';
