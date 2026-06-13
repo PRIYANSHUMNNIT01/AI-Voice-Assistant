@@ -66,7 +66,6 @@ const Home = () => {
 
   const handleCommand = (data) => {
     const { type, userInput, response } = data;
-    speak(response);
     if (type === 'facebook-open') {
       window.open('https://www.facebook.com/', '_blank');
     }
@@ -75,9 +74,17 @@ const Home = () => {
       window.open('https://www.google.com/search?q=weather', '_blank');
     }
 
-    if (type === 'youtube-search' || type === 'youtube-play') {
+    if (type === 'youtube-play'|| type ==='youtube-search'||type=='youtube-open') {
       const query = encodeURIComponent(userInput);
-      window.open(`https://www.youtube.com/results?search_query=${query}`, '_blank');
+      if(query.size()==0){
+        window.open(
+          `https://www.youtube.com/`
+        );
+      }
+      window.open(
+        `https://www.youtube.com/results?search_query=${query}`,
+        "_blank"
+      );
     }
 
     if (type === 'google-search') {

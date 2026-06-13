@@ -16,17 +16,20 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+  
     try {
-      navigate("/")
-      let res = await axios.post(
+      const res = await axios.post(
         `${serverUrl}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );
+  
       setUserData(res.data);
-      if(res.data!==null)navigate("/customize")
-      console.log(res.data);
+  
+      if (res.data) {
+        navigate("/customize");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -72,12 +75,34 @@ const Login = () => {
         </div>
 
         <button
-          className="w-full mb-4 py-3 bg-blue-500 hover:bg-blue-600 rounded-md font-semibold transition-all"
-          onClick={handleSubmit}
-        >
-          Login
-        </button>
-        <p>
+  className="w-full mb-4 py-3 bg-blue-500 hover:bg-blue-600 rounded-md font-semibold transition-all"
+  onClick={handleSubmit}
+>
+  Login
+</button>
+
+<div className="w-full flex items-center my-2">
+  <div className="flex-1 h-[1px] bg-gray-400"></div>
+  <span className="px-3 text-gray-300 text-sm">OR</span>
+  <div className="flex-1 h-[1px] bg-gray-400"></div>
+</div>
+
+<button
+  type="button"
+  onClick={() => {
+    window.location.href = "http://localhost:5001/api/auth/google";
+  }}
+  className="w-full flex items-center justify-center gap-3 py-3 rounded-lg bg-white text-gray-800 font-medium border border-gray-300 hover:bg-gray-100 hover:shadow-lg transition-all duration-300 mb-4"
+>
+  <img
+    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    alt="Google"
+    className="w-5 h-5"
+  />
+  Continue with Google
+</button>
+
+<p>
           Don't Have any account?{" "}
           <Link to={"/signup"} className="text-blue-500">
             Signup

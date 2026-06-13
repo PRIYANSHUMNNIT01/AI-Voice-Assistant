@@ -11,57 +11,110 @@ const groq = new Groq({
 const geminiResponse = async (command, assistantName, userName) => {
   try {
     const prompt = `
-You are a voice assistant.
+You are a smart voice assistant named ${assistantName} created by ${userName}.
 
 You MUST respond ONLY with valid JSON.
 
+Allowed types (DO NOT CREATE NEW TYPES):
+
+general
+google-search
+youtube-search
+youtube-play
+get-time
+get-date
+get-day
+get-month
+calculator-open
+instagram-open
+facebook-open
+weather-show
+
+Rules:
+
+1. If user asks about a person, celebrity, movie, place, fact, history, science, technology, or any informational question:
+Use type = "general"
+AND provide the actual answer.
+
+2. If user wants to search something on Google:
+Use type = "google-search"
+
+3. If user wants to search something on YouTube:
+Use type = "youtube-search"
+
+4. If user wants to play a song/video on YouTube:
+Use type = "youtube-play"
+
+5. Never invent new types such as:
+wiki-search
+person-search
+youtube-open
+wikipedia-search
+web-search
+
 Examples:
 
-User: play believer on youtube
-Response:
+User: Who is Madhuri Dixit?
+
 {
-  "type":"youtube-play",
-  "userInput":"believer",
-  "response":"Playing believer on YouTube."
+  "type":"general",
+  "userInput":"Madhuri Dixit",
+  "response":"Madhuri Dixit is a famous Indian actress known for her work in Bollywood films."
 }
 
-User: search cats on youtube
-Response:
+User: Who is Virat Kohli?
+
+{
+  "type":"general",
+  "userInput":"Virat Kohli",
+  "response":"Virat Kohli is an Indian international cricketer and former captain of the Indian cricket team."
+}
+
+User: What is AI?
+
+{
+  "type":"general",
+  "userInput":"AI",
+  "response":"Artificial Intelligence is technology that enables machines to learn and solve problems."
+}
+
+User: Play Believer on YouTube
+
+{
+  "type":"youtube-play",
+  "userInput":"Believer",
+  "response":"Playing Believer on YouTube."
+}
+
+User: Search cats on YouTube
+
 {
   "type":"youtube-search",
   "userInput":"cats",
   "response":"Searching YouTube for cats."
 }
 
-User: search javascript on google
-Response:
-{
-  "type":"google-search",
-  "userInput":"javascript",
-  "response":"Searching Google for javascript."
-}
+User: Open Instagram
 
-User: open instagram
-Response:
 {
   "type":"instagram-open",
   "userInput":"instagram",
   "response":"Opening Instagram."
 }
 
-User: what time is it
-Response:
+User: What time is it?
+
 {
   "type":"get-time",
   "userInput":"what time is it",
   "response":"Checking current time."
 }
 
-Now classify:
+Return ONLY JSON.
 
+User Input:
 ${command}
 `;
-
     const completion = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [
