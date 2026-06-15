@@ -51,53 +51,94 @@ const Home = () => {
 
   //speak function
   const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text)
-    isSpeakingRef.current = true
+    console.log("SPEAK FUNCTION CALLED:", text);
+  
+    const utterance = new SpeechSynthesisUtterance(text);
+  
+    utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+  
+    isSpeakingRef.current = true;
+  
+    utterance.onstart = () => {
+      console.log("Speech Started");
+    };
+  
     utterance.onend = () => {
-      setAiText("")
-      isSpeakingRef.current = false
+      console.log("Speech Ended");
+  
+      setAiText("");
+      isSpeakingRef.current = false;
+  
       setTimeout(() => {
         startRecognition();
       }, 800);
-    }
-    synth.cancel();
-    synth.speak(utterance);
+    };
+  
+    utterance.onerror = (e) => {
+      console.log("Speech Error:", e);
+    };
+  
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
   };
-
   const handleCommand = (data) => {
+
+    console.log("HANDLE COMMAND:", data);
+  
     const { type, userInput, response } = data;
+  
+    console.log("RESPONSE:", response);
+  
+    speak(response);
+  
     if (type === 'facebook-open') {
       window.open('https://www.facebook.com/', '_blank');
     }
-
+  
     if (type === 'weather-show') {
       window.open('https://www.google.com/search?q=weather', '_blank');
     }
-
-    if (type === 'youtube-play'|| type ==='youtube-search'||type=='youtube-open') {
+  
+    if (
+      type === 'youtube-play' ||
+      type === 'youtube-search' ||
+      type === 'youtube-open'
+    ) {
       const query = encodeURIComponent(userInput);
-      if(query.size()==0){
+  
+      if (!query || query === "YouTube") {
+        window.open("https://www.youtube.com/", "_blank");
+      } else {
         window.open(
-          `https://www.youtube.com/`
+          `https://www.youtube.com/results?search_query=${query}`,
+          "_blank"
         );
       }
-      window.open(
-        `https://www.youtube.com/results?search_query=${query}`,
-        "_blank"
-      );
     }
-
+  
     if (type === 'google-search') {
       const query = encodeURIComponent(userInput);
-      window.open(`https://www.google.com/search?q=${query}`, '_blank');
+      window.open(
+        `https://www.google.com/search?q=${query}`,
+        '_blank'
+      );
     }
-
+  
     if (type === 'calculator-open') {
-      window.open('https://www.google.com/search?q=calculator', '_blank');
+      window.open(
+        'https://www.google.com/search?q=calculator',
+        '_blank'
+      );
     }
-
+  
     if (type === 'instagram-open') {
-      window.open('https://www.instagram.com/', '_blank');
+      window.open(
+        'https://www.instagram.com/',
+        '_blank'
+      );
     }
   };
 

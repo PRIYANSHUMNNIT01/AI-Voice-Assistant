@@ -10,6 +10,8 @@ import geminiResponse from "./gemini.js";
 import session from "express-session";
 import passport from "./config/passport.js";
 import googleRouter from "./routes/google.route.js";
+import mailRouter from "./routes/mail.route.js";
+import { sendMail } from "./mcp/sendMail.js";
 
 dotenv.config();
 
@@ -28,7 +30,6 @@ app.use(
 
 app.use(express.json());
 
-// Session (required for Google OAuth)
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "mysecret",
@@ -37,11 +38,27 @@ app.use(
   })
 );
 
-// Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Test route
+// Test Mail Route
+app.get("/test-mail", async (req, res) => {
+  try {
+    const result = await sendMail(
+        "6a2846a62b76bd870760528c",
+        "priyanshukumar6712@gmail.com",
+        "Test Email",
+        "Hello from AI Voice Assistant"
+      );
+
+    res.json(result);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// Main Route
 app.get("/", async (req, res) => {
   try {
     const prompt = req.query.prompt;
@@ -67,6 +84,7 @@ app.get("/", async (req, res) => {
 app.use("/api/auth", router);
 app.use("/api/auth", googleRouter);
 app.use("/api/user", UserRouter);
+app.use("/api", mailRouter);
 
 app.get("/api/status", (req, res) => {
   res.status(200).json({
@@ -74,7 +92,6 @@ app.get("/api/status", (req, res) => {
   });
 });
 
-// Start Server
 app.listen(port, () => {
   connectDb();
   console.log(`server listening on port ${port}`);

@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-
+import isAuth from "../middleware/isAuth.js";
 const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
     },
+
     email: {
       type: String,
       required: true,
@@ -16,24 +17,35 @@ const userSchema = mongoose.Schema(
         "Please provide a valid email",
       ],
     },
+
     password: {
       type: String,
       required: true,
     },
+
+    googleAccessToken: {
+      type: String,
+    },
+
+    googleRefreshToken: {
+      type: String,
+    },
+
     assistantName: {
       type: String,
     },
+
     assistantImage: {
       type: String,
     },
+
     history: [
       {
         type: String,
       },
     ],
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
-
 const User=mongoose.model("User",userSchema)
 export default User

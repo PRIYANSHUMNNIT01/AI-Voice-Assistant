@@ -26,6 +26,8 @@ passport.use(
     },
 
     async (accessToken, refreshToken, profile, done) => {
+      console.log("ACCESS TOKEN:", accessToken);
+      console.log("REFRESH TOKEN:", refreshToken);
       try {
         let user = await User.findOne({
           email: profile.emails[0].value,
@@ -38,7 +40,11 @@ passport.use(
             password: "google-auth-user",
           });
         }
-
+        
+        user.googleAccessToken = accessToken;
+        user.googleRefreshToken = refreshToken;
+        
+        await user.save();
         done(null, user);
 
       } catch (err) {

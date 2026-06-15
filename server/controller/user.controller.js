@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 import uploadOnCloudinary from "../config/cloudinary.js";
 import geminiResponse from "../gemini.js";
 import moment from "moment";
-
+import { sendMail } from "../mcp/sendMail.js";
 export const getCurrentUser = async (req, res) => {
   try {
     console.log("userId", "userId");
@@ -102,7 +102,20 @@ export const askToAssistant= async(req,res)=>{
                     userInput:gemResult.userInput,
                     response:gemResult.response,
                 });
+            case "send-email":
 
+                const emailResult = await sendMail(
+                    req.userId,
+                    gemResult.to,
+                    gemResult.subject,
+                    gemResult.message
+                );
+            
+                return res.json({
+                    type,
+                    userInput: gemResult.to,
+                    response: emailResult
+                });
                 default:
                     return res.status(400).json({response: "I didn't understand that command."})
 
