@@ -4,7 +4,8 @@ import { UserDataContext } from "./UserDataContext";
 
 const UserContext = ({ children }) => {
  
-  const serverUrl = "http://localhost:5001";
+  // const serverUrl = "http://localhost:5001";
+  const serverUrl = import.meta.env.VITE_BACKEND_URL;
   const [userData, setUserData] = useState(null);
   const [frontendImage, setFrontendImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);

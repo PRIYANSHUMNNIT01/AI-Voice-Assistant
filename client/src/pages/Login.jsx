@@ -90,7 +90,9 @@ const Login = () => {
 <button
   type="button"
   onClick={() => {
-    window.location.href = "http://localhost:5001/api/auth/google";
+    // window.location.href = "http://localhost:5001/api/auth/google";
+    window.location.href =
+  `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`;
   }}
   className="w-full flex items-center justify-center gap-3 py-3 rounded-lg bg-white text-gray-800 font-medium border border-gray-300 hover:bg-gray-100 hover:shadow-lg transition-all duration-300 mb-4"
 >
